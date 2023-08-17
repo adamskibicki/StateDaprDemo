@@ -38,7 +38,7 @@ jobs:
       matrix:
         services:
           [
-            { "appName": "state-service", "directory": "./StateDaprDemo" },
+            { "appName": "state-service", "directory": "./" },
           ]
     steps:
       - name: Checkout repository
