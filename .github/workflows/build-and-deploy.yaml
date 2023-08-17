@@ -60,7 +60,7 @@ jobs:
             az group create -g ${{ secrets.RESOURCE_GROUP }} -l westeurope
             dockerLoginServer=$(az deployment group create -g ${{ secrets.RESOURCE_GROUP }} -f ./deploy/acr.bicep | jq '.properties.outputs.loginServer')
             echo "::set-output name=dockerLoginServer::$dockerLoginServer"
-            acrCredentials=$(az acr credential show --name dockerLoginServer --resource-group ${{ secrets.RESOURCE_GROUP }})
+            acrCredentials=$(az acr credential show --name $dockerLoginServer --resource-group ${{ secrets.RESOURCE_GROUP }})
             acrUsername=$(acrCredentials | jq '.username')
             echo "::set-output name=acrUsername::$acrUsername"
             acrPassword=$(acrCredentials | jq '.passwords[0].value')
