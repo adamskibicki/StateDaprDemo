@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateDaprDemo", "StateDaprDemo\StateDaprDemo.csproj", "{FA548C12-9806-4CE3-9C0A-0E9421DB8B6B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceToService", "ServiceToService\ServiceToService.csproj", "{D22C9DE8-1DF3-4ED0-9986-3D9CD5EBB062}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{FA548C12-9806-4CE3-9C0A-0E9421DB8B6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA548C12-9806-4CE3-9C0A-0E9421DB8B6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA548C12-9806-4CE3-9C0A-0E9421DB8B6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D22C9DE8-1DF3-4ED0-9986-3D9CD5EBB062}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D22C9DE8-1DF3-4ED0-9986-3D9CD5EBB062}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D22C9DE8-1DF3-4ED0-9986-3D9CD5EBB062}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D22C9DE8-1DF3-4ED0-9986-3D9CD5EBB062}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

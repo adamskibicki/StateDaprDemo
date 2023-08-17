@@ -3,20 +3,14 @@ param environmentName string = 'env-${uniqueString(resourceGroup().id)}'
 
 param minReplicas int = 0
 
-param nodeImage string 
-param nodePort int = 3000
-var nodeServiceAppName = 'node-app'
+param stateServiceImage string 
+param stateServicePort int = 80
+var stateServiceAppName = 'state-app'
 
-param pythonImage string
-param pythonPort int = 5000
-var pythonServiceAppName = 'python-app'
+param svcsvcImage string
+param svcsvcPort int = 80
+var svcsvcServiceAppName = 'svcsvc-app'
 
-param goImage string
-param goPort int = 8050
-var goServiceAppName = 'go-app'
-
-param apimName string = 'store-api-mgmt-${uniqueString(resourceGroup().id)}'
-param deployApim bool = true
 param isPrivateRegistry bool = true
 
 param containerRegistry string
@@ -46,38 +40,32 @@ module cosmosdb 'cosmosdb.bicep' = {
   }
 }
 
-// API Management
-module apim 'api-management.bicep' = if (deployApim) {
-  name: '${deployment().name}--apim'
-  params: {
-    apimName: apimName
-    publisherName: 'Contoso Store'
-    publisherEmail: 'demo@example.com'
-    apimLocation: location
-  }
-}
-
-
-// Python App
-module pythonService 'container-http.bicep' = {
-  name: '${deployment().name}--${pythonServiceAppName}'
+// svcsvc App
+module svcsvcService 'container-http.bicep' = {
+  name: '${deployment().name}--${svcsvcServiceAppName}'
   dependsOn: [
     environment
   ]
   params: {
     enableIngress: true
-    isExternalIngress: false
+    isExternalIngress: true
     location: location
     environmentName: environmentName
-    containerAppName: pythonServiceAppName
-    containerImage: pythonImage
-    containerPort: pythonPort
+    containerAppName: svcsvcServiceAppName
+    containerImage: svcsvcImage
+    containerPort: svcsvcPort
     isPrivateRegistry: isPrivateRegistry 
     minReplicas: minReplicas
     containerRegistry: containerRegistry
     registryPassword: registryPassword
     containerRegistryUsername: containerRegistryUsername
-    revisionMode: 'Single'
+    revisionMode: 'Multiple'
+    env: [
+      {
+        name: 'STATE_SERVICE_NAME'
+        value: stateServiceAppName
+      }
+    ]
     secrets: [
       {
         name: registryPassword
@@ -88,7 +76,7 @@ module pythonService 'container-http.bicep' = {
 }
 
 resource stateDaprComponent 'Microsoft.App/managedEnvironments/daprComponents@2022-01-01-preview' = {
-  name: '${environmentName}/orders'
+  name: '${environmentName}/items'
   dependsOn: [
     environment
   ]
@@ -108,11 +96,11 @@ resource stateDaprComponent 'Microsoft.App/managedEnvironments/daprComponents@20
       }
       {
         name: 'database'
-        value: 'ordersDb'
+        value: 'itemsDb'
       }
       {
         name: 'collection'
-        value: 'orders'
+        value: 'items'
       }
       {
         name: 'masterkey'
@@ -120,44 +108,14 @@ resource stateDaprComponent 'Microsoft.App/managedEnvironments/daprComponents@20
       }
     ]
     scopes: [
-      pythonServiceAppName
+      stateServiceAppName
     ]
   }
 }
 
-// Go App
-module goService 'container-http.bicep' = {
-  name: '${deployment().name}--${goServiceAppName}'
-  dependsOn: [
-    environment
-  ]
-  params: {
-    enableIngress: true
-    isExternalIngress: false
-    location: location
-    environmentName: environmentName
-    containerAppName: goServiceAppName
-    containerImage: goImage
-    containerPort: goPort
-    isPrivateRegistry: isPrivateRegistry
-    minReplicas: minReplicas
-    containerRegistry: containerRegistry
-    registryPassword: registryPassword
-    containerRegistryUsername: containerRegistryUsername
-    revisionMode: 'Single'
-    secrets: isPrivateRegistry ? [
-      {
-        name: registryPassword
-        value: containerRegistryPassword
-      }
-    ] : []
-  }
-}
-
-
-// Node App
-module nodeService 'container-http.bicep' = {
-  name: '${deployment().name}--${nodeServiceAppName}'
+// state App
+module stateService 'container-http.bicep' = {
+  name: '${deployment().name}--${stateServiceAppName}'
   dependsOn: [
     environment
   ]
@@ -166,25 +124,15 @@ module nodeService 'container-http.bicep' = {
     isExternalIngress: true
     location: location
     environmentName: environmentName
-    containerAppName: nodeServiceAppName
-    containerImage: nodeImage
-    containerPort: nodePort
+    containerAppName: stateServiceAppName
+    containerImage: stateServiceImage
+    containerPort: stateServicePort
     minReplicas: minReplicas
     isPrivateRegistry: isPrivateRegistry 
     containerRegistry: containerRegistry
     registryPassword: registryPassword
     containerRegistryUsername: containerRegistryUsername
-    revisionMode: 'Multiple'
-    env: [
-      {
-        name: 'ORDER_SERVICE_NAME'
-        value: pythonServiceAppName
-      }
-      {
-        name: 'INVENTORY_SERVICE_NAME'
-        value: goServiceAppName
-      }
-    ]
+    revisionMode: 'Single'
     secrets: [
       {
         name: registryPassword
@@ -194,20 +142,6 @@ module nodeService 'container-http.bicep' = {
   }
 }
 
-module apimStoreApi 'api-management-api.bicep' = if (deployApim) {
-  name: '${deployment().name}--apim-store-api'
-  dependsOn: [
-    apim
-    nodeService
-  ]
-  params: {
-    apiName: 'store-api'
-    apimInstanceName: apimName
-    apiEndPointURL: 'https://${nodeService.outputs.fqdn}/swagger.json'
-  }
-}
 
-output nodeFqdn string = nodeService.outputs.fqdn
-output pythonFqdn string = pythonService.outputs.fqdn
-output goFqdn string = goService.outputs.fqdn
-output apimFqdn string = deployApim ? apim.outputs.fqdn : 'API Management not deployed'
+output stateFqdn string = stateService.outputs.fqdn
+output svcsvcFqdn string = svcsvcService.outputs.fqdn
