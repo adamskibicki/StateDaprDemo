@@ -60,19 +60,11 @@ jobs:
             az group create -g ${{ secrets.RESOURCE_GROUP }} -l westeurope
             dockerLoginServer=$(az deployment group create -g ${{ secrets.RESOURCE_GROUP }} -f ./deploy/acr.bicep | jq -r '.properties.outputs.loginServer.value')
             echo "::set-output name=dockerLoginServer::$dockerLoginServer"
-            acrCredentials=$(az acr credential show --name $dockerLoginServer --resource-group ${{ secrets.RESOURCE_GROUP }})
-            echo $acrCredentials
             acrUsername=$(az acr credential show --name $dockerLoginServer --resource-group ${{ secrets.RESOURCE_GROUP }} | jq -r '.username')
             echo "::set-output name=acrUsername::$acrUsername"
             acrPassword=$(az acr credential show --name $dockerLoginServer --resource-group ${{ secrets.RESOURCE_GROUP }} | jq -r '.passwords[0].value')
             echo "::set-output name=acrPassword::$acrPassword"
             
-      - name: Test output
-        run: |
-          echo "${{ steps.deploy-bicep.outputs.dockerLoginServer }}"
-          echo "${{ steps.deploy-bicep.outputs.acrUsername }}"
-          echo "${{ steps.deploy-bicep.outputs.acrPassword }}"
-
   package-services:
     runs-on: ubuntu-latest
     needs: [deploy-acr, set-env]
