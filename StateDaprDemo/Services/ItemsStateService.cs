@@ -7,7 +7,7 @@ public class ItemsStateService : IItemsStateService
 {
     private readonly IHttpClientFactory httpClientFactory;
     private readonly string baseURL;
-    private const string DAPR_STATE_STORE = "itemsstore";
+    private const string DAPR_STATE_STORE = "items";
 
     public ItemsStateService(IHttpClientFactory httpClientFactory)
     {

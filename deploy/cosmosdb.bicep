@@ -28,10 +28,10 @@ param maxStalenessPrefix int = 100000
 param maxIntervalInSeconds int = 300
 
 @description('The name for the database')
-param databaseName string = 'ordersDb'
+param databaseName string = 'itemsDb'
 
 @description('The name for the container')
-param containerName string = 'orders'
+param containerName string = 'items'
 
 @description('Maximum throughput for the container')
 @minValue(4000)
