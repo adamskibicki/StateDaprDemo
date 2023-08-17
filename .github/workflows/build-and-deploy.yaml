@@ -69,6 +69,8 @@ jobs:
       - name: Test output
         run: |
           echo "${{ steps.deploy-bicep.outputs.dockerLoginServer }}"
+          echo "${{ steps.deploy-bicep.outputs.acrUsername }}"
+          echo "${{ steps.deploy-bicep.outputs.acrPassword }}"
 
   package-services:
     runs-on: ubuntu-latest
