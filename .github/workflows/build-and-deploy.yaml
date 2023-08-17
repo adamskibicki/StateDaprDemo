@@ -30,6 +30,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ set-env ]
     steps:
+      - name: 'Setup jq'
+        uses: dcarbone/install-jq-action@v1.0.1
+        with:
+          version: '${{ inputs.version }}'
+          force: '${{ inputs.force }}'
+
+      - name: 'Check jq'
+        run: |
+          which jq
+          jq --version
+          
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -44,7 +55,7 @@ jobs:
         with:
           inlineScript: |
             az group create -g ${{ secrets.RESOURCE_GROUP }} -l westeurope
-            loginServer=$(az deployment group create -g ${{ secrets.RESOURCE_GROUP }} -f ./deploy/acr.bicep)
+            loginServer=$(az deployment group create -g ${{ secrets.RESOURCE_GROUP }} -f ./deploy/acr.bicep | jq '.properties.outputs.loginServer')
             echo "::set-output name=loginServer::$loginServer"
             
       - name: Test output
