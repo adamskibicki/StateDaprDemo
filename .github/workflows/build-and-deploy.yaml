@@ -38,7 +38,7 @@ jobs:
       matrix:
         services:
           [
-            { "appName": "state-service", "directory": "./" },
+            { "appName": "state-service", "directory": "./StateDaprDemo" },
           ]
     steps:
       - name: Checkout repository
@@ -67,6 +67,12 @@ jobs:
             type=sha
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
+      - name: List files in the repository
+        run: |
+          ls -R ${{ github.workspace }}
+      - name: List files in the service directory
+        run: |
+          ls -R ${{ matrix.services.directory }}
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
