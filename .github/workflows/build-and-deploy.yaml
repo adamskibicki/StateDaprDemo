@@ -45,6 +45,7 @@ jobs:
           inlineScript: |
             az group create -g ${{ secrets.RESOURCE_GROUP }} -l westeurope
             loginServer=$(az deployment group create -g ${{ secrets.RESOURCE_GROUP }} -f ./deploy/acr.bicep -o tsv)
+            echo "::set-output name=loginServer::$loginServer"
             
       - name: Test output
         run: |
