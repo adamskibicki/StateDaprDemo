@@ -153,5 +153,5 @@ jobs:
                 svcsvcImage='${{ needs.package-services.outputs.containerImage-svcsvc }}' \
                 svcsvcPort=80 \
                 containerRegistry=${{ needs.deploy-acr.outputs.dockerLoginServer }} \
-                containerRegistryUsername=${{ github.actor }} \
-                containerRegistryPassword=${{ secrets.GITHUB_TOKEN }}
+                containerRegistryUsername=${{ needs.deploy-acr.outputs.acrUsername }} \
+                containerRegistryPassword=${{ needs.deploy-acr.outputs.acrPassword }}
