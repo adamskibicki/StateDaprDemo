@@ -12,12 +12,14 @@ public class OrdersController : ControllerBase
     private readonly IHttpClientFactory httpClientFactory;
     private readonly string baseURL;
     private const string DAPR_STATE_STORE = "orders";
+    private readonly ILogger<OrdersController> logger;
 
-    public OrdersController(IHttpClientFactory httpClientFactory)
+    public OrdersController(IHttpClientFactory httpClientFactory, ILogger<OrdersController> logger)
     {
         this.httpClientFactory = httpClientFactory;
+        this.logger = logger;
         baseURL = (Environment.GetEnvironmentVariable("BASE_URL") ?? "http://localhost") + ":"
-            + (Environment.GetEnvironmentVariable("DAPR_HTTP_PORT") ?? "3500");
+                                                                                         + (Environment.GetEnvironmentVariable("DAPR_HTTP_PORT") ?? "3500");
     }
 
     [HttpPost]
@@ -47,6 +49,10 @@ public class OrdersController : ControllerBase
     {
         var httpClient = CreateHttpClient();
 
+        var content = await httpClient.GetStringAsync($"{baseURL}/v1.0/state/{DAPR_STATE_STORE}/{id.ToString()}");
+
+        logger.LogInformation(content);
+        
         var order = await httpClient.GetFromJsonAsync<Order>(
             $"{baseURL}/v1.0/state/{DAPR_STATE_STORE}/{id.ToString()}");
 
