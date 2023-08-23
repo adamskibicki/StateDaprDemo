@@ -18,6 +18,7 @@ public class ItemsManagementController : ControllerBase
         STATE_SERVICE_NAME = Environment.GetEnvironmentVariable("STATE_SERVICE_NAME") ?? "svcsvc-app";
     }
     
+    [HttpGet]
     public async Task<string> GetItems()
     {
         var httpClient = CreateHttpClient();
