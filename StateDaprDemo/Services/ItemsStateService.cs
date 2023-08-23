@@ -49,7 +49,7 @@ public class ItemsStateService : IItemsStateService
     {
         var httpClient = CreateHttpClient();
 
-        return await httpClient.GetStringAsync($"{baseURL}/v1.0/state/{DAPR_STATE_STORE}/bulk");
+        return await httpClient.GetStringAsync($"{baseURL}/v1.0/state/{DAPR_STATE_STORE}");
     }
 
     public async Task<string> DeleteItem(Guid id)
