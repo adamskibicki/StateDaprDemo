@@ -9,12 +9,14 @@ public class ItemsManagementController : ControllerBase
     private readonly IHttpClientFactory httpClientFactory;
     private readonly string baseURL;
     private readonly string STATE_SERVICE_NAME;
+    private readonly ILogger<ItemsManagementController> logger;
 
-    public ItemsManagementController(IHttpClientFactory httpClientFactory)
+    public ItemsManagementController(IHttpClientFactory httpClientFactory, ILogger<ItemsManagementController> logger)
     {
         this.httpClientFactory = httpClientFactory;
+        this.logger = logger;
         baseURL = (Environment.GetEnvironmentVariable("BASE_URL") ?? "http://localhost") + ":" 
-            + (Environment.GetEnvironmentVariable("DAPR_HTTP_PORT") ?? "3500");
+                                                                                         + (Environment.GetEnvironmentVariable("DAPR_HTTP_PORT") ?? "3500");
         STATE_SERVICE_NAME = Environment.GetEnvironmentVariable("STATE_SERVICE_NAME") ?? "svcsvc-app";
     }
     
@@ -23,7 +25,11 @@ public class ItemsManagementController : ControllerBase
     {
         var httpClient = CreateHttpClient();
 
-        return await httpClient.GetStringAsync($"{baseURL}/v1.0/invoke/{STATE_SERVICE_NAME}/GetItem?id={id}");
+        var url = $"{baseURL}/GetItem?id={id}";
+        
+        logger.LogInformation(url);
+        
+        return await httpClient.GetStringAsync(url);
     }
     
     private HttpClient CreateHttpClient()
@@ -31,6 +37,7 @@ public class ItemsManagementController : ControllerBase
         var httpClient = httpClientFactory.CreateClient();
         httpClient.DefaultRequestHeaders.Accept.Add(
             new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+        httpClient.DefaultRequestHeaders.Add("dapr-app-id", STATE_SERVICE_NAME);
         return httpClient;
     }
 }
