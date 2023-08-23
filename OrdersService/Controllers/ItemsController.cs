@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using StateDaprDemo.Services;
+using OrdersService.Services;
 
-namespace StateDaprDemo.Controllers;
+namespace OrdersService.Controllers;
 
 [ApiController]
 [Route("[action]")]

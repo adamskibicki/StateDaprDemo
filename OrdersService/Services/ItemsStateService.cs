@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 
-namespace StateDaprDemo.Services;
+namespace OrdersService.Services;
 
 public class ItemsStateService : IItemsStateService
 {

@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using StateDaprDemo.Services;
+using OrdersService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

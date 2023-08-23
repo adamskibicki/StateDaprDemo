@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace ServiceToService.Controllers;
+namespace StoreAPI.Controllers;
 
 [ApiController]
 [Route("[action]")]

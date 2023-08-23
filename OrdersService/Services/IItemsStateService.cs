@@ -1,4 +1,4 @@
-﻿namespace StateDaprDemo.Services;
+﻿namespace OrdersService.Services;
 
 public interface IItemsStateService
 {
