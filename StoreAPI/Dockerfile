@@ -5,16 +5,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["ServiceToService/ServiceToService.csproj", "ServiceToService/"]
-RUN dotnet restore "ServiceToService/ServiceToService.csproj"
+COPY ["StoreAPI/StoreAPI.csproj", "StoreAPI/"]
+RUN dotnet restore "StoreAPI/StoreAPI.csproj"
 COPY . .
-WORKDIR "/src/ServiceToService"
-RUN dotnet build "ServiceToService.csproj" -c Release -o /app/build
+WORKDIR "/src/StoreAPI"
+RUN dotnet build "StoreAPI.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "ServiceToService.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "StoreAPI.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ServiceToService.dll"]
+ENTRYPOINT ["dotnet", "StoreAPI.dll"]

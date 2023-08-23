@@ -5,16 +5,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["StateDaprDemo/StateDaprDemo.csproj", "StateDaprDemo/"]
-RUN dotnet restore "StateDaprDemo/StateDaprDemo.csproj"
+COPY ["OrdersService/OrdersService.csproj", "OrdersService/"]
+RUN dotnet restore "OrdersService/OrdersService.csproj"
 COPY . .
-WORKDIR "/src/StateDaprDemo"
-RUN dotnet build "StateDaprDemo.csproj" -c Release -o /app/build
+WORKDIR "/src/OrdersService"
+RUN dotnet build "OrdersService.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "StateDaprDemo.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "OrdersService.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "StateDaprDemo.dll"]
+ENTRYPOINT ["dotnet", "OrdersService.dll"]
