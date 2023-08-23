@@ -19,11 +19,11 @@ public class ItemsManagementController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<string> GetItems()
+    public async Task<string> GetItems(Guid id)
     {
         var httpClient = CreateHttpClient();
 
-        return await httpClient.GetStringAsync($"{baseURL}/v1.0/invoke/{STATE_SERVICE_NAME}/GetItems");
+        return await httpClient.GetStringAsync($"{baseURL}/v1.0/invoke/{STATE_SERVICE_NAME}/GetItem?id={id}");
     }
     
     private HttpClient CreateHttpClient()

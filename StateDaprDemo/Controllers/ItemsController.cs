@@ -20,8 +20,6 @@ public class ItemsController : ControllerBase
     public async Task<string> CreateItems(int count) => await itemsStateService.CreateItems(count);
     [HttpGet]
     public async Task<string> GetItem(Guid id) => await itemsStateService.GetItem(id);
-    [HttpGet]
-    public async Task<string> GetItems() => await itemsStateService.GetItems();
     [HttpDelete]
     public async Task<string> DeleteItem(Guid id) => await itemsStateService.DeleteItem(id);
 }

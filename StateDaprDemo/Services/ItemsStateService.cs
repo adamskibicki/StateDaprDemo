@@ -35,7 +35,7 @@ public class ItemsStateService : IItemsStateService
         var state = new StringContent(itemsJson, Encoding.UTF8, "application/json");
 
         var response = await httpClient.PostAsync($"{baseURL}/v1.0/state/{DAPR_STATE_STORE}", state);
-        return response.ToString();
+        return itemsJson;
     }
 
     public async Task<string> GetItem(Guid id)
@@ -43,13 +43,6 @@ public class ItemsStateService : IItemsStateService
         var httpClient = CreateHttpClient();
 
         return await httpClient.GetStringAsync($"{baseURL}/v1.0/state/{DAPR_STATE_STORE}/{id.ToString()}");
-    }
-
-    public async Task<string> GetItems()
-    {
-        var httpClient = CreateHttpClient();
-
-        return await httpClient.GetStringAsync($"{baseURL}/v1.0/state/{DAPR_STATE_STORE}");
     }
 
     public async Task<string> DeleteItem(Guid id)
