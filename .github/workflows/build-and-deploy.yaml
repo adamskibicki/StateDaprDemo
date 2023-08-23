@@ -73,7 +73,7 @@ jobs:
       packages: write
     outputs:
       containerImage-orders: ${{ steps.image-tag.outputs.image-orders-service }}
-      containerImage-storeapi: ${{ steps.image-tag.outputs.image-storeapi-service }}
+      containerImage-store-api: ${{ steps.image-tag.outputs.image-store-api-service }}
       containerImage-inventory: ${{ steps.image-tag.outputs.image-inventory-service }}
     strategy:
       matrix:
@@ -151,7 +151,7 @@ jobs:
                 minReplicas=0 \
                 ordersServiceImage='${{ needs.package-services.outputs.containerImage-orders }}' \
                 ordersServicePort=80 \
-                storeapiImage='${{ needs.package-services.outputs.containerImage-storeapi }}' \
+                storeapiImage='${{ needs.package-services.outputs.containerImage-store-api }}' \
                 storeapiPort=80 \
                 inventoryImage='${{ needs.package-services.outputs.containerImage-inventory }}' \
                 inventoryPort=80 \
