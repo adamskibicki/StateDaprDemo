@@ -1,6 +1,3 @@
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using OrdersService.Services;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -11,8 +8,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpClient();
-
-builder.Services.TryAddTransient<IItemsStateService, ItemsStateService>();
 
 var app = builder.Build();
 
