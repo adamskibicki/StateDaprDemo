@@ -3,13 +3,17 @@ param environmentName string = 'env-${uniqueString(resourceGroup().id)}'
 
 param minReplicas int = 0
 
-param stateServiceImage string 
-param stateServicePort int = 80
-var stateServiceAppName = 'state-app'
+param ordersServiceImage string 
+param ordersServicePort int = 80
+var ordersServiceAppName = 'orders-app'
 
-param svcsvcImage string
-param svcsvcPort int = 80
-var svcsvcServiceAppName = 'svcsvc-app'
+param storeapiImage string
+param storeapiPort int = 80
+var storeapiServiceAppName = 'storeapi-app'
+
+param inventoryImage string
+param inventoryPort int = 80
+var inventoryServiceAppName = 'inventory-app'
 
 param isPrivateRegistry bool = true
 
@@ -40,9 +44,9 @@ module cosmosdb 'cosmosdb.bicep' = {
   }
 }
 
-// svcsvc App
-module svcsvcService 'container-http.bicep' = {
-  name: '${deployment().name}--${svcsvcServiceAppName}'
+// storeapi App
+module storeapiService 'container-http.bicep' = {
+  name: '${deployment().name}--${storeapiServiceAppName}'
   dependsOn: [
     environment
   ]
@@ -51,9 +55,9 @@ module svcsvcService 'container-http.bicep' = {
     isExternalIngress: true
     location: location
     environmentName: environmentName
-    containerAppName: svcsvcServiceAppName
-    containerImage: svcsvcImage
-    containerPort: svcsvcPort
+    containerAppName: storeapiServiceAppName
+    containerImage: storeapiImage
+    containerPort: storeapiPort
     isPrivateRegistry: isPrivateRegistry 
     minReplicas: minReplicas
     containerRegistry: containerRegistry
@@ -62,8 +66,51 @@ module svcsvcService 'container-http.bicep' = {
     revisionMode: 'Multiple'
     env: [
       {
-        name: 'STATE_SERVICE_NAME'
-        value: stateServiceAppName
+        name: 'ORDERS_SERVICE_NAME'
+        value: ordersServiceAppName
+      }
+      {
+        name: 'INVENTORY_SERVICE_NAME'
+        value: inventoryServiceAppName
+      }
+    ]
+    secrets: [
+      {
+        name: registryPassword
+        value: containerRegistryPassword
+      }
+    ]
+  }
+}
+
+// inventory App
+module inventoryService 'container-http.bicep' = {
+  name: '${deployment().name}--${inventoryServiceAppName}'
+  dependsOn: [
+    environment
+  ]
+  params: {
+    enableIngress: true
+    isExternalIngress: true
+    location: location
+    environmentName: environmentName
+    containerAppName: inventoryServiceAppName
+    containerImage: inventoryImage
+    containerPort: inventoryPort
+    isPrivateRegistry: isPrivateRegistry 
+    minReplicas: minReplicas
+    containerRegistry: containerRegistry
+    registryPassword: registryPassword
+    containerRegistryUsername: containerRegistryUsername
+    revisionMode: 'Multiple'
+    env: [
+      {
+        name: 'ORDERS_SERVICE_NAME'
+        value: ordersServiceAppName
+      }
+      {
+        name: 'INVENTORY_SERVICE_NAME'
+        value: inventoryServiceAppName
       }
     ]
     secrets: [
@@ -108,14 +155,14 @@ resource stateDaprComponent 'Microsoft.App/managedEnvironments/daprComponents@20
       }
     ]
     scopes: [
-      stateServiceAppName
+      ordersServiceAppName
     ]
   }
 }
 
-// state App
-module stateService 'container-http.bicep' = {
-  name: '${deployment().name}--${stateServiceAppName}'
+// orders App
+module ordersService 'container-http.bicep' = {
+  name: '${deployment().name}--${ordersServiceAppName}'
   dependsOn: [
     environment
   ]
@@ -124,9 +171,9 @@ module stateService 'container-http.bicep' = {
     isExternalIngress: true
     location: location
     environmentName: environmentName
-    containerAppName: stateServiceAppName
-    containerImage: stateServiceImage
-    containerPort: stateServicePort
+    containerAppName: ordersServiceAppName
+    containerImage: ordersServiceImage
+    containerPort: ordersServicePort
     minReplicas: minReplicas
     isPrivateRegistry: isPrivateRegistry 
     containerRegistry: containerRegistry
@@ -143,5 +190,6 @@ module stateService 'container-http.bicep' = {
 }
 
 
-output stateFqdn string = stateService.outputs.fqdn
-output svcsvcFqdn string = svcsvcService.outputs.fqdn
+output ordersFqdn string = ordersService.outputs.fqdn
+output storeapiFqdn string = storeapiService.outputs.fqdn
+output inventoryFqdn string = inventoryService.outputs.fqdn

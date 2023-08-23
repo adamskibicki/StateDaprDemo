@@ -72,14 +72,16 @@ jobs:
       contents: read
       packages: write
     outputs:
-      containerImage-state: ${{ steps.image-tag.outputs.image-state-service }}
-      containerImage-svcsvc: ${{ steps.image-tag.outputs.image-svcsvc-service }}
+      containerImage-orders: ${{ steps.image-tag.outputs.image-orders-service }}
+      containerImage-storeapi: ${{ steps.image-tag.outputs.image-storeapi-service }}
+      containerImage-inventory: ${{ steps.image-tag.outputs.image-inventory-service }}
     strategy:
       matrix:
         services:
           [
-            { "appName": "state-service", "context": ".", "dockerfilePath": "./StateDaprDemo/Dockerfile" },
-            { "appName": "svcsvc-service", "context": ".", "dockerfilePath": "./ServiceToService/Dockerfile" },
+            { "appName": "orders-service", "context": ".", "dockerfilePath": "./OrdersService/Dockerfile" },
+            { "appName": "store-api", "context": ".", "dockerfilePath": "./StoreAPI/Dockerfile" },
+            { "appName": "inventory-service", "context": ".", "dockerfilePath": "./InventoryService/Dockerfile" },
           ]
     steps:
       - name: Checkout repository
@@ -128,7 +130,6 @@ jobs:
           echo ::set-output name=image-${{ matrix.services.appName }}::${{ needs.deploy-acr.outputs.dockerLoginServer }}/$GITHUB_REPOSITORY/${{ matrix.services.appName }}:sha-${{ needs.set-env.outputs.version }} | tr '[:upper:]' '[:lower:]'
       
   deploy:
-#    if: false
     runs-on: ubuntu-latest
     needs: [package-services, deploy-acr]
     steps:
@@ -148,10 +149,12 @@ jobs:
             az deployment group create -g ${{ secrets.RESOURCE_GROUP }} -f ./deploy/main.bicep \
              -p \
                 minReplicas=0 \
-                stateServiceImage='${{ needs.package-services.outputs.containerImage-state }}' \
-                stateServicePort=80 \
-                svcsvcImage='${{ needs.package-services.outputs.containerImage-svcsvc }}' \
-                svcsvcPort=80 \
+                ordersServiceImage='${{ needs.package-services.outputs.containerImage-orders }}' \
+                ordersServicePort=80 \
+                storeapiImage='${{ needs.package-services.outputs.containerImage-storeapi }}' \
+                storeapiPort=80 \
+                inventoryImage='${{ needs.package-services.outputs.containerImage-inventory }}' \
+                inventoryPort=80 \
                 containerRegistry=${{ needs.deploy-acr.outputs.dockerLoginServer }} \
                 containerRegistryUsername=${{ needs.deploy-acr.outputs.acrUsername }} \
                 containerRegistryPassword=${{ needs.deploy-acr.outputs.acrPassword }}
