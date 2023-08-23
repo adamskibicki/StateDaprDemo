@@ -4,7 +4,7 @@ using StateDaprDemo.Services;
 namespace StateDaprDemo.Controllers;
 
 [ApiController]
-[Route("api/[controller]/[action]")]
+[Route("[action]")]
 public class ItemsController : ControllerBase
 {
     private readonly ILogger<ItemsController> logger;

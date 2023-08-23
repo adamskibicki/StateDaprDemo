@@ -128,7 +128,7 @@ jobs:
           echo ::set-output name=image-${{ matrix.services.appName }}::${{ needs.deploy-acr.outputs.dockerLoginServer }}/$GITHUB_REPOSITORY/${{ matrix.services.appName }}:sha-${{ needs.set-env.outputs.version }} | tr '[:upper:]' '[:lower:]'
       
   deploy:
-    if: false
+#    if: false
     runs-on: ubuntu-latest
     needs: [package-services, deploy-acr]
     steps:
