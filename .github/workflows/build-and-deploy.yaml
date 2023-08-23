@@ -73,7 +73,7 @@ jobs:
       packages: write
     outputs:
       containerImage-orders: ${{ steps.image-tag.outputs.image-orders-service }}
-      containerImage-store-api: ${{ steps.image-tag.outputs.image-store-api-service }}
+      containerImage-store-api: ${{ steps.image-tag.outputs.image-store-api }}
       containerImage-inventory: ${{ steps.image-tag.outputs.image-inventory-service }}
     strategy:
       matrix:

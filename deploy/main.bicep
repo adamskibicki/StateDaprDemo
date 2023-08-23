@@ -113,7 +113,7 @@ module inventoryService 'container-http.bicep' = {
 }
 
 resource stateDaprComponent 'Microsoft.App/managedEnvironments/daprComponents@2022-01-01-preview' = {
-  name: '${environmentName}/items'
+  name: '${environmentName}/orders'
   dependsOn: [
     environment
   ]
@@ -133,11 +133,11 @@ resource stateDaprComponent 'Microsoft.App/managedEnvironments/daprComponents@20
       }
       {
         name: 'database'
-        value: 'itemsDb'
+        value: 'ordersDb'
       }
       {
         name: 'collection'
-        value: 'items'
+        value: 'orders'
       }
       {
         name: 'masterkey'
