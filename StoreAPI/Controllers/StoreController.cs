@@ -17,7 +17,7 @@ public class StoreController : ControllerBase
         Environment.GetEnvironmentVariable("ORDERS_SERVICE_NAME") ?? "orders-app";
     
     private readonly string INVENTORY_SERVICE_NAME =
-        Environment.GetEnvironmentVariable("ORDERS_SERVICE_NAME") ?? "orders-app";
+        Environment.GetEnvironmentVariable("ORDERS_SERVICE_NAME") ?? "inventory-app";
 
     public StoreController(IHttpClientFactory httpClientFactory)
     {
@@ -51,7 +51,7 @@ public class StoreController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> ListInventory([FromQuery]Guid id)
+    public async Task<IActionResult> ListInventory()
     {
         var httpClient = CreateHttpClient(INVENTORY_SERVICE_NAME);
 
