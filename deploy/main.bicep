@@ -63,7 +63,7 @@ module storeapiService 'container-http.bicep' = {
     containerRegistry: containerRegistry
     registryPassword: registryPassword
     containerRegistryUsername: containerRegistryUsername
-    revisionMode: 'Single'
+    revisionMode: 'Multiple'
     env: [
       {
         name: 'ORDERS_SERVICE_NAME'
