@@ -52,7 +52,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy bicep
+      - name: Deploy bicep (ACR, RG)
         id: deploy-bicep
         uses: azure/CLI@v1
         with:
@@ -141,7 +141,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy bicep
+      - name: Deploy bicep - main
         uses: azure/CLI@v1
         with:
           inlineScript: |
