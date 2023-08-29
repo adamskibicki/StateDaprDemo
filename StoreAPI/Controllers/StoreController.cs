@@ -17,7 +17,7 @@ public class StoreController : ControllerBase
         Environment.GetEnvironmentVariable("ORDERS_SERVICE_NAME") ?? "orders-app";
     
     private readonly string INVENTORY_SERVICE_NAME =
-        Environment.GetEnvironmentVariable("ORDERS_SERVICE_NAME") ?? "inventory-app";
+        Environment.GetEnvironmentVariable("INVENTORY_SERVICE_NAME") ?? "inventory-app";
 
     private readonly ILogger<StoreController> logger;
     
