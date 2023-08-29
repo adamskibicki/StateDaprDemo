@@ -61,7 +61,7 @@ public class StoreController : ControllerBase
         
         var jsonString = await response.Content.ReadAsStringAsync();
         
-        return Ok(JsonSerializer.Deserialize<InventoryItem>(jsonString));
+        return Ok(JsonSerializer.Deserialize<InventoryItem[]>(jsonString));
     }
 
     private HttpClient CreateHttpClient(string serviceName)
