@@ -64,7 +64,9 @@ public class StoreController : ControllerBase
         
         var jsonString = await response.Content.ReadAsStringAsync();
 
-        logger.LogInformation(jsonString);
+        logger.LogWarning("test if logged correctly - start");
+        logger.LogWarning(jsonString);
+        logger.LogWarning("test if logged correctly - end");
         
         return Ok(JsonSerializer.Deserialize<InventoryItem[]>(jsonString));
     }
