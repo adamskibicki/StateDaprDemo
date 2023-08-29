@@ -19,9 +19,12 @@ public class StoreController : ControllerBase
     private readonly string INVENTORY_SERVICE_NAME =
         Environment.GetEnvironmentVariable("ORDERS_SERVICE_NAME") ?? "inventory-app";
 
-    public StoreController(IHttpClientFactory httpClientFactory)
+    private readonly ILogger<StoreController> logger;
+    
+    public StoreController(IHttpClientFactory httpClientFactory, ILogger<StoreController> logger)
     {
         this.httpClientFactory = httpClientFactory;
+        this.logger = logger;
     }
 
     [HttpPost]
@@ -60,6 +63,8 @@ public class StoreController : ControllerBase
         var response = await httpClient.GetAsync(url);
         
         var jsonString = await response.Content.ReadAsStringAsync();
+
+        logger.LogInformation(jsonString);
         
         return Ok(JsonSerializer.Deserialize<InventoryItem[]>(jsonString));
     }
