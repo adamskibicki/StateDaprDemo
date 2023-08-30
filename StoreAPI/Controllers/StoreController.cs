@@ -15,12 +15,12 @@ public class StoreController : ControllerBase
 
     private readonly string ORDERS_SERVICE_NAME =
         Environment.GetEnvironmentVariable("ORDERS_SERVICE_NAME") ?? "orders-app";
-    
+
     private readonly string INVENTORY_SERVICE_NAME =
         Environment.GetEnvironmentVariable("INVENTORY_SERVICE_NAME") ?? "inventory-app";
 
     private readonly ILogger<StoreController> logger;
-    
+
     public StoreController(IHttpClientFactory httpClientFactory, ILogger<StoreController> logger)
     {
         this.httpClientFactory = httpClientFactory;
@@ -28,7 +28,7 @@ public class StoreController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateOrder([FromBody]Order order)
+    public async Task<IActionResult> CreateOrder([FromBody] Order order)
     {
         var httpClient = CreateHttpClient(ORDERS_SERVICE_NAME);
 
@@ -40,16 +40,16 @@ public class StoreController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> FetchOrder([FromQuery]Guid id)
+    public async Task<IActionResult> FetchOrder([FromQuery] Guid id)
     {
         var httpClient = CreateHttpClient(ORDERS_SERVICE_NAME);
 
         var url = $"{baseURL}/Fetch?id={id}";
 
         var response = await httpClient.GetAsync(url);
-        
+
         var jsonString = await response.Content.ReadAsStringAsync();
-        
+
         return Ok(JsonSerializer.Deserialize<Order>(jsonString));
     }
 
@@ -61,13 +61,9 @@ public class StoreController : ControllerBase
         var url = $"{baseURL}/List";
 
         var response = await httpClient.GetAsync(url);
-        
+
         var jsonString = await response.Content.ReadAsStringAsync();
 
-        logger.LogWarning("test if logged correctly - start");
-        logger.LogWarning(jsonString);
-        logger.LogWarning("test if logged correctly - end");
-        
         return Ok(JsonSerializer.Deserialize<InventoryItem[]>(jsonString));
     }
 

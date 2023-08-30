@@ -6,15 +6,15 @@ namespace StoreAPI.Controllers;
 [Route("[action]")]
 public class TestController : ControllerBase
 {
-    // [HttpGet]
-    // public IActionResult Test0()
-    // {
-    //     return Ok();
-    // }
-    //
-    // [HttpGet]
-    // public IActionResult Test1()
-    // {
-    //     return Ok();
-    // }
+    [HttpGet]
+    public IActionResult Test0()
+    {
+        return Ok();
+    }
+    
+    [HttpGet]
+    public IActionResult Test1()
+    {
+        return Ok();
+    }
 }
